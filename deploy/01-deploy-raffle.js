@@ -6,7 +6,7 @@ const {
 } = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify")
 
-const FUND_AMOUNT = ethers.parseEther("1") // 1 Ether, or 1e18 (10^18) Wei
+const FUND_AMOUNT = ethers.utils.parseEther("1") // 1 Ether, or 1e18 (10^18) Wei
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -20,7 +20,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
         const transactionResponse = await vrfCoordinatorV2Mock.createSubscription()
         const transactionReceipt = await transactionResponse.wait()
-        subscriptionId = 1
+        subscriptionId = transactionReceipt.events[0].args.subId
         // Fund the subscription
         // Our mock makes it so we don't actually have to worry about sending fund
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, FUND_AMOUNT)
